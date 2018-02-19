@@ -1,6 +1,4 @@
-# MapReduce-Word-Count
-MapReduce algorithm for Word Count Problem
-
+# MapReduce Development With Java
 In this lab, you will run a MapReduce application using the Hadoop Java API. The ["Hello World"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) of MapReduce is traditionally a word count program. You will perform a word count on the text of *A Tale of Two Cities*, a classic novel by Charles Dickens.
 
 ## Objectives

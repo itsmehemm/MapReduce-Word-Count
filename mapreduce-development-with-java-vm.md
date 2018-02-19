@@ -1,46 +1,44 @@
-# MapReduce-Word-Count
-MapReduce algorithm for Word Count Problem
-
+# MapReduce Development With Java
 In this lab, you will run a MapReduce application using the Hadoop Java API. The ["Hello World"](https://en.wikipedia.org/wiki/%22Hello,_World!%22_program) of MapReduce is traditionally a word count program. You will perform a word count on the text of *A Tale of Two Cities*, a classic novel by Charles Dickens.
 
 ## Objectives
 1. Become familiar with the Mapper and Reducer phase of a MapReduce job.
-2. Submit the job on the Hortonworks instance and examine the output.
+2. Submit the job on the Hortonworks virtual machine and examine the output.
 
 ## Prerequisites
-This lab assumes that the student has a working Hortonworks Sandbox instance running in C3.
+This lab assumes that the student has a working Hortonworks virtual machine environment.
 
 Windows users may need to use [PuTTY](http://www.chiark.greenend.org.uk/~sgtatham/putty/) in order to run `scp` and `ssh` commands.
 
 ## Instructions
-1. We will be executing the MapReduce job on the Hortonworks instance so let's first start by copying our data file and Java program to the instance. Open a terminal and in the `lesson-160-mapreduce-development-with-java` directory, execute the following commands using your C3 IP address and `.pem` key pair.
+1. We will be executing the MapReduce job on the Hortonworks virtual machine (VM) so let's first start by copying our data file and Java program to the VM. Open a terminal and in the `lesson-160-mapreduce-development-with-java` directory, execute the following commands.
 
     ```shell
-    scp -i ~/my_key_pairs/bigdata.pem lab/a-tale-of-two-cities.txt centos@10.x.x.x:/tmp
-    scp -i ~/my_key_pairs/bigdata.pem lab/WordCount.java centos@10.x.x.x:/tmp
+    scp lab/a-tale-of-two-cities.txt root@sandbox.hortonworks.com:/tmp
+    scp lab/WordCount.java root@sandbox.hortonworks.com:/tmp
     ```
 
-2. Use ssh to login to the instance.
+2. Use ssh to login to the VM.
 
     ```shell
-    ssh -i ~/my_key_pairs/bigdata.pem centos@10.x.x.x
+    ssh root@sandbox.hortonworks.com
     ```
 
 3. Now we need to add the data file to HDFS. Run the following command on the VM.
 
     ```shell
-    [centos@bigdata-9061 ~]$ sudo -u hdfs hadoop fs -put /tmp/a-tale-of-two-cities.txt /tmp/a-tale-of-two-cities.txt
+    [root@sandbox ~]# sudo -u hdfs hadoop fs -put /tmp/a-tale-of-two-cities.txt /tmp/a-tale-of-two-cities.txt
     ```
 
 4. Now let's compile our Java class and prepare a JAR file to be executed by Hadoop. Run the following commands on the VM.
 
     ```shell
-    [centos@bigdata-9061 ~]$ sudo su - hdfs
-    [hdfs@bigdata-9061 ~]$ mkdir -p lesson-160/com/example
-    [hdfs@bigdata-9061 ~]$ cp /tmp/WordCount.java lesson-160/com/example/
-    [hdfs@bigdata-9061 ~]$ cd lesson-160/
-    [hdfs@bigdata-9061 lesson-160]$ javac -cp `hadoop classpath` com/example/WordCount.java
-    [hdfs@bigdata-9061 lesson-160]$ jar cvf wordcount.jar com/
+    [root@sandbox ~]# sudo su - hdfs
+    [hdfs@sandbox ~]$ mkdir -p lesson-160/com/example
+    [hdfs@sandbox ~]$ cp /tmp/WordCount.java lesson-160/com/example/
+    [hdfs@sandbox ~]$ cd lesson-160/
+    [hdfs@sandbox lesson-160]$ javac -cp `hadoop classpath` com/example/WordCount.java
+    [hdfs@sandbox lesson-160]$ jar cvf wordcount.jar com/
     ```
 
 `hadoop classpath` is a command that prints the class path needed to get the Hadoop jar and the required libraries.
@@ -114,7 +112,7 @@ Windows users may need to use [PuTTY](http://www.chiark.greenend.org.uk/~sgtatha
 6. Let's run the example! In the VM terminal, run the following command.
 
     ```shell
-    [hdfs@bigdata-9061 lesson-160]$ yarn jar wordcount.jar com.example.WordCount /tmp/a-tale-of-two-cities.txt /tmp/lesson-160
+    [hdfs@sandbox lesson-160]$ yarn jar wordcount.jar com.example.WordCount /tmp/a-tale-of-two-cities.txt /tmp/lesson-160
     ```
 
     After the job completes running, use the Ambari HDFS Explorer to navigate to `/tmp/lesson-160`. Inside that directory, you should see a file named `part-r-00000` which contains the results of the word count analysis. Download it to your local machine and take a look!
